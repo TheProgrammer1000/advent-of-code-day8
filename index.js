@@ -6,8 +6,6 @@ const dataInput = `
 35390
 `;
 
-let counterHowMany = 0;
-
 let finalDoesExist = false;
 
 const deletingEmptyText = (dataInput) => {
@@ -104,27 +102,17 @@ const solotion = (sortedArrayMap, sortedArrayPlayGround) => {
   const sortedArrayMapTemp = sortedArrayMap.slice();
   const sortedArrayPlayGroundTemp = sortedArrayPlayGround.slice();
 
-  console.log('sortedArrayMapTemp: ', sortedArrayMapTemp);
-  // console.log('sortedArrayMapTemp: ', sortedArrayMapTemp);
-  // console.log('sortedArrayPlayGroundTemp', sortedArrayPlayGroundTemp);
-
   for (let i = 0; i < sortedArrayMapTemp.length; i++) {
     // Row
-    isValue = false;
+    let isValue = false;
     for (let j = 0; j < sortedArrayMapTemp[i].length; j++) {
-      // console.log(
-      //   'sortedArrayPlayGroundTemp[i][j]: ',
-      //   sortedArrayMa'pTemp[i][j]
-      // );
       if (sortedArrayPlayGroundTemp[i][j] !== '') {
-        // console.log('sant');
+        // console.log(
+        //   'sortedArrayPlayGroundTemp[i][j]: ',
+        //   sortedArrayPlayGroundTemp[i][j]
+        // );
         Calculation(i, j, sortedArrayPlayGroundTemp[i][j], sortedArrayMapTemp); // Calculation för varje index!
-        isValue = true;
-        break;
       }
-    }
-    if (isValue) {
-      break;
     }
   }
 };
@@ -134,17 +122,27 @@ function isBackwardGreater(indexLengthBackward, array, valueNow) {
   // console.log('indexLengthBackward: ', indexLengthBackward - 1); // Korrekt
   let isGreater = false;
   for (let i = 0; i < indexLengthBackward; i++) {
-    if (valueNow > array[i]) {
+    if (array[i] >= valueNow) {
       isGreater = true;
     }
+    // console.log('valueNow: ', valueNow);
+    // console.log('array[i]: ', array[i]);
   }
   if (isGreater === true) {
+    return 0;
+  } else {
     return 1;
   }
 }
 
 function SearchingWholeRow(arrayIndexes, mapArray) {
   let countSum = 0;
+
+  // console.log(
+  //   'mapArray[arrayIndexes.rowIndex][arrayIndexes.columnIndex]: ',
+  //   mapArray[arrayIndexes.rowIndex][arrayIndexes.columnIndex]
+  // );
+
   for (let i = 0; i < mapArray.length; i++) {
     if (arrayIndexes.rowIndex === i) {
       for (let j = 0; j < mapArray[i].length; j++) {
@@ -160,8 +158,13 @@ function SearchingWholeRow(arrayIndexes, mapArray) {
                 mapArray[i],
                 mapArray[i][j]
               );
+              // console.log('countSum RÄTT INGE NULL: ', countSum);
+              // console.log('countSum HÄÄÄÄÄÄR: ', countSum);
             } else if (counter > j) {
-              if (mapArray[i][counter] >= mapArray[i][j]) {
+              if (
+                mapArray[i][counter] >=
+                mapArray[arrayIndexes.rowIndex][arrayIndexes.columnIndex]
+              ) {
                 // Höger om raden
                 isGreater = true;
                 break;
@@ -172,13 +175,15 @@ function SearchingWholeRow(arrayIndexes, mapArray) {
           if (isGreater === true) {
             // console.log('Finns inte något på raden! ');
           } else {
-            // console.log('Finns något på raden!');
+            // console.log('Finns något på raden HÄÄÄÄR! RÄÄÄÄTTT');
             countSum += 1;
+            // console.log('countSum: ', countSum);
           }
         }
       }
     }
   }
+  // console.log('counterSum', countSum);
   return countSum;
 }
 
@@ -186,6 +191,7 @@ function SearchingWholeColumn(arrayIndexes, mapArray) {
   // Column 1 Backward
   let counterTotal = 0;
   let counterColumn = 0;
+
   for (let i = 0; i < mapArray.length; i++) {
     // Column
     counterColumn++;
@@ -247,6 +253,9 @@ function ColumnBackward(theFinalValue, backWardArray) {
   }
 }
 
+let counterHowMany = 0;
+
+let counterFinal = 0;
 function Calculation(rowIndex, columnIndex, value, mapArray) {
   let RowValue = 0;
   let ColumnValue = 0;
@@ -261,8 +270,12 @@ function Calculation(rowIndex, columnIndex, value, mapArray) {
   RowValue += SearchingWholeRow(arrayIndexes, mapArray);
   ColumnValue += SearchingWholeColumn(arrayIndexes, mapArray);
 
+  // console.log('RowValue: ', RowValue);
+  // console.log('ColumnValue: ', ColumnValue);
+
   if (RowValue > 0 || ColumnValue > 0) {
     counterHowMany += 1;
+    // console.log('SAAAAANNNNNTTTT ADDDDEEERRRRAAAAA!');
   }
 
   //----------------------------------------------------------------------------------------------
