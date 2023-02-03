@@ -290,4 +290,4 @@ const SortedArrayPlayGround = playGroundSorted(SortedArrayMap);
 
 solotion(dataArrayFinal, SortedArrayPlayGround, SortedArrayPlayGround);
 
-console.log('counterHowMany: ', counterHowMany);
+console.log('counterHowMany: ', counterHowMany); // RÄTT!!!
