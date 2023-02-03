@@ -153,15 +153,35 @@ function Calculation(rowIndex, columnIndex, value, mapArray) {
     if (arrayIndexes.rowIndex === i) {
       for (let j = 0; j < mapArray[i].length; j++) {
         if (arrayIndexes.columnIndex === j) {
+          // Kollar att den value som finns är det rätta
           let counter = 0;
-          let isGreater = true;
+          let isGreater = false;
+
           while (counter < mapArray.length) {
-            console.log('mapArray[i][j]: ', mapArray[i][j]);
-            console.log('mapArray[i][counter]: ', mapArray[i][counter]);
-            if (mapArray[i][j] > mapArray[i][counter]) {
-              isGreater = false;
+            // Här loppar igenom hela rowen!
+            // console.log('mapArray[i][j]: ', mapArray[i][j]);
+            // console.log('i: ', i);
+            // console.log('j:', j);
+            if (counter === j) {
+              // console.log('Här inne');
+              isBackwardGreater(counter);
+            } else {
+              if (mapArray[i][counter] >= mapArray[i][j]) {
+                // console.log('mapArray[i][counter]: ', mapArray[i][counter]);
+                isGreater = true;
+                break;
+                // } else if (mapArray[i][j] > mapArray[i][0]) {
+                //   console.log('sant');
+                // }
+                console.log('mapArray[i][counter]: ', mapArray[i][counter]);
+              }
             }
             counter++;
+          }
+          if (isGreater === false) {
+            // console.log('Funkade!');
+          } else {
+            // console.log('Inte funkade!');
           }
         }
       }
@@ -172,7 +192,9 @@ function Calculation(rowIndex, columnIndex, value, mapArray) {
   }
 }
 
-function isGreater() {}
+function isBackwardGreater(indexLengthBackward) {
+  console.log('indexLengthBackward: ', indexLengthBackward - 1); // Korrekt
+}
 
 const dataTemp = deletingEmptyText(dataInput);
 const dataArray = dataSortColumnArray(dataTemp); // Sortings
