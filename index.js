@@ -286,8 +286,22 @@ const dataArray = dataSortColumnArray(dataTemp); // Sortings
 const dataArrayFinal = dataSortRowTempArray(dataArray);
 
 const SortedArrayMap = arrayFilterWithString(dataArrayFinal);
+
 const SortedArrayPlayGround = playGroundSorted(SortedArrayMap);
 
 solotion(dataArrayFinal, SortedArrayPlayGround, SortedArrayPlayGround);
 
 console.log('counterHowMany: ', counterHowMany); // RÄTT!!!
+console.log('SortedArrayMap: ', SortedArrayMap); // Gör en counter här som räknar hur månge E som finns! addera detta sedan med counterHowMany!
+
+let counter = 0;
+for (let i = 0; i < SortedArrayMap.length; i++) {
+  for (let j = 0; j < SortedArrayMap[i].length; j++) {
+    if (SortedArrayMap[i][j] === 'E') {
+      counter++;
+    }
+  }
+}
+
+const RealTotal = counterHowMany + counter;
+console.log('RealTotal: ', RealTotal);
