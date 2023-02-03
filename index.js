@@ -29,30 +29,84 @@ const dataSortColumnArray = (dataTemp) => {
 };
 
 const dataSortRowTempArray = (dataArray) => {
-  const arrayRows = dataArray.length; // Rows
-  const arrayColumn = dataArray[0].length; // Columns
-
-  console.log(dataArray);
-
   let arrayTemp = [];
   let arrayFinal = [];
 
   for (let i = 0; i < dataArray.length; i++) {
     for (let j = 0; j < dataArray[i].length; j++) {
-      console.log(dataArray[i][j]);
       arrayTemp.push(dataArray[i][j]);
       if (j === dataArray[i].length - 1) {
-        console.log('arrayTemp: ', arrayTemp);
         arrayFinal.push(arrayTemp);
         arrayTemp = [];
       }
     }
   }
+  return arrayFinal;
+};
 
-  console.log('arrayFinal: ', arrayFinal);
-  console.log('arrayFinal[0][0]: ', arrayFinal[0][0]);
+const arrayFilterWithString = (dataArray) => {
+  const dataArrayTemp = dataArray.slice();
+  // const dataArrayFinal = dataArray.slice();
+
+  let arrayFinal = [];
+  let arrayRealFinal = [];
+
+  let counter = 0;
+  while (counter < 5) {
+    for (let i = 0; i < dataArrayTemp.length; i++) {
+      if (counter === 0) {
+        arrayFinal.push('E');
+      } else if (counter === 4) {
+        arrayFinal.push('E');
+      } else {
+        arrayFinal.push(dataArrayTemp[counter][i]);
+      }
+
+      if (i === dataArrayTemp.length - 1) {
+        arrayRealFinal.push(arrayFinal);
+        arrayFinal = [];
+        counter++;
+      }
+    }
+  }
+  let arrayNewFinal = [];
+
+  for (let i = 0; i < arrayRealFinal.length; i++) {
+    arrayRealFinal[i][0] = 'E';
+    arrayRealFinal[i][arrayRealFinal.length - 1] = 'E';
+  }
+
+  return arrayRealFinal;
+};
+
+function playGroundSorted(arrayRealFinal) {
+  let arrayNow = [];
+  for (let i = 0; i < arrayRealFinal.length; i++) {
+    // console.log('arrayRealFinal: ', arrayRealFinal[i]);
+    let arrayTemp = [];
+    for (let j = 0; j < arrayRealFinal[i].length; j++) {
+      if (arrayRealFinal[i][j] !== 'E') {
+        arrayTemp.push(arrayRealFinal[i][j]);
+      }
+    }
+    arrayNow.push(arrayTemp);
+  }
+  return arrayNow;
+}
+
+const solotion = (sortedArrayMap, sortedArrayPlayGround) => {
+  const sortedArrayMapTemp = sortedArrayMap.slice();
+  const sortedArrayPlayGroundTemp = sortedArrayPlayGround.slice();
+
+  console.log('sortedArrayMapTemp: ', sortedArrayMapTemp);
+  console.log('sortedArrayPlayGroundTemp', sortedArrayPlayGroundTemp);
 };
 
 const dataTemp = deletingEmptyText(dataInput);
-const dataArray = dataSortColumnArray(dataTemp);
+const dataArray = dataSortColumnArray(dataTemp); // Sortings
 const dataArrayFinal = dataSortRowTempArray(dataArray);
+
+const SortedArrayMap = arrayFilterWithString(dataArrayFinal);
+const SortedArrayPlayGround = playGroundSorted(SortedArrayMap);
+
+solotion(SortedArrayMap, SortedArrayPlayGround);
