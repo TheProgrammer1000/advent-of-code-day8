@@ -5,6 +5,11 @@ const dataInput = `
 33549
 35390
 `;
+
+let counterHowMany = 0;
+
+let finalDoesExist = false;
+
 const deletingEmptyText = (dataInput) => {
   const dataTemp = dataInput.slice();
   for (let i = 0; i < dataTemp.length; i++) {
@@ -100,19 +105,20 @@ const solotion = (sortedArrayMap, sortedArrayPlayGround) => {
   const sortedArrayPlayGroundTemp = sortedArrayPlayGround.slice();
 
   console.log('sortedArrayMapTemp: ', sortedArrayMapTemp);
-  console.log('sortedArrayPlayGroundTemp', sortedArrayPlayGroundTemp);
+  // console.log('sortedArrayMapTemp: ', sortedArrayMapTemp);
+  // console.log('sortedArrayPlayGroundTemp', sortedArrayPlayGroundTemp);
 
   for (let i = 0; i < sortedArrayMapTemp.length; i++) {
     // Row
     isValue = false;
     for (let j = 0; j < sortedArrayMapTemp[i].length; j++) {
-      console.log(
-        'sortedArrayPlayGroundTemp[i][j]: ',
-        sortedArrayMapTemp[i][j]
-      );
+      // console.log(
+      //   'sortedArrayPlayGroundTemp[i][j]: ',
+      //   sortedArrayMa'pTemp[i][j]
+      // );
       if (sortedArrayPlayGroundTemp[i][j] !== '') {
-        console.log('sant');
-        Calculation(i, j, sortedArrayPlayGroundTemp[i][j], sortedArrayMapTemp);
+        // console.log('sant');
+        Calculation(i, j, sortedArrayPlayGroundTemp[i][j], sortedArrayMapTemp); // Calculation för varje index!
         isValue = true;
         break;
       }
@@ -123,31 +129,18 @@ const solotion = (sortedArrayMap, sortedArrayPlayGround) => {
   }
 };
 
-function Calculation(rowIndex, columnIndex, value, mapArray) {
-  let counterHowMany = 0;
-
-  console.log('rowIndex: ', rowIndex);
-  console.log('columnIndex: ', columnIndex);
-  console.log('value: ', value);
-
-  arrayIndexes = {
-    rowIndex: rowIndex,
-    columnIndex: columnIndex,
-    value: value
-  };
-
-  console.log('arrayIndexes: ', arrayIndexes);
-  console.log('mapArray: ', mapArray); // map array
-
-  /**
-   *  Kolla hela rowen alltså alla index på rowen samt valuet där, detta blir då horizontellt
-   *  Kolla sedan Verticalt uppifrån och ner och detta gör jag med vilket row index den har och tar alla på den columnen
-   */
-
-  // ROW, WHOLE Row!!!!
-  counterHowMany += SearchingWholeRow(arrayIndexes, mapArray);
-  console.log('counterHowMany: ', counterHowMany);
-  //----------------------------------------------------------------------------------------------
+function isBackwardGreater(indexLengthBackward, array, valueNow) {
+  // Vänster om en rad!
+  // console.log('indexLengthBackward: ', indexLengthBackward - 1); // Korrekt
+  let isGreater = false;
+  for (let i = 0; i < indexLengthBackward; i++) {
+    if (valueNow > array[i]) {
+      isGreater = true;
+    }
+  }
+  if (isGreater === true) {
+    return 1;
+  }
 }
 
 function SearchingWholeRow(arrayIndexes, mapArray) {
@@ -177,33 +170,102 @@ function SearchingWholeRow(arrayIndexes, mapArray) {
             counter++;
           }
           if (isGreater === true) {
-            console.log('Finns inte något på raden! ');
+            // console.log('Finns inte något på raden! ');
           } else {
-            console.log('Finns något på raden!');
+            // console.log('Finns något på raden!');
             countSum += 1;
           }
         }
       }
     }
   }
-
   return countSum;
 }
 
-function isBackwardGreater(indexLengthBackward, array, valueNow) {
-  // Vänster om en rad!
-  // console.log('indexLengthBackward: ', indexLengthBackward - 1); // Korrekt
+function SearchingWholeColumn(arrayIndexes, mapArray) {
+  // Column 1 Backward
+  let counterTotal = 0;
+  let counterColumn = 0;
+  for (let i = 0; i < mapArray.length; i++) {
+    // Column
+    counterColumn++;
+  }
 
+  let arrayBackward = [];
+  let arrayForward = [];
+  for (let i = 0; i < mapArray.length; i++) {
+    if (i === arrayIndexes.rowIndex) {
+      counterTotal += ColumnBackward(
+        // Column Bakåt
+        mapArray[arrayIndexes.rowIndex][arrayIndexes.columnIndex],
+        arrayBackward
+      );
+    } else if (i < arrayIndexes.rowIndex) {
+      arrayBackward.push(mapArray[i][arrayIndexes.columnIndex]);
+    } else {
+      arrayForward.push(mapArray[i][arrayIndexes.columnIndex]);
+    }
+  }
+  counterTotal += ColumnForward(
+    // Column forward
+    // Column Framåt
+    arrayForward,
+    mapArray[arrayIndexes.rowIndex][arrayIndexes.columnIndex]
+  );
+
+  return counterTotal;
+}
+
+function ColumnForward(arrayForward, value) {
   let isGreater = false;
-  for (let i = 0; i < indexLengthBackward; i++) {
-    if (valueNow > array[i]) {
+  for (let i = 0; i < arrayForward.length; i++) {
+    if (arrayForward[i] >= value) {
       isGreater = true;
     }
   }
-  if (isGreater === true) {
+  if (isGreater === false) {
     return 1;
+  } else {
+    return 0;
   }
-  // console.log('array: ', array);
+}
+
+function ColumnBackward(theFinalValue, backWardArray) {
+  // console.log('backWardArray: ', backWardArray);
+  // console.log('theFinalValue: ', theFinalValue);
+
+  let isGreater = false;
+  for (let i = 0; i < backWardArray.length; i++) {
+    if (backWardArray[i] >= theFinalValue) {
+      isGreater = true;
+    }
+  }
+  if (isGreater === false) {
+    return 1;
+  } else {
+    return 0;
+  }
+}
+
+function Calculation(rowIndex, columnIndex, value, mapArray) {
+  let RowValue = 0;
+  let ColumnValue = 0;
+
+  arrayIndexes = {
+    rowIndex: rowIndex,
+    columnIndex: columnIndex,
+    value: value
+  };
+
+  // ROW, WHOLE Row!!!!
+  RowValue += SearchingWholeRow(arrayIndexes, mapArray);
+  ColumnValue += SearchingWholeColumn(arrayIndexes, mapArray);
+
+  if (RowValue > 0 || ColumnValue > 0) {
+    counterHowMany += 1;
+  }
+
+  //----------------------------------------------------------------------------------------------
 }
 
 const dataTemp = deletingEmptyText(dataInput);
@@ -213,4 +275,6 @@ const dataArrayFinal = dataSortRowTempArray(dataArray);
 const SortedArrayMap = arrayFilterWithString(dataArrayFinal);
 const SortedArrayPlayGround = playGroundSorted(SortedArrayMap);
 
-solotion(dataArrayFinal, SortedArrayPlayGround);
+solotion(dataArrayFinal, SortedArrayPlayGround, SortedArrayPlayGround);
+
+console.log('counterHowMany: ', counterHowMany);
