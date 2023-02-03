@@ -124,6 +124,8 @@ const solotion = (sortedArrayMap, sortedArrayPlayGround) => {
 };
 
 function Calculation(rowIndex, columnIndex, value, mapArray) {
+  let counterHowMany = 0;
+
   console.log('rowIndex: ', rowIndex);
   console.log('columnIndex: ', columnIndex);
   console.log('value: ', value);
@@ -135,65 +137,73 @@ function Calculation(rowIndex, columnIndex, value, mapArray) {
   };
 
   console.log('arrayIndexes: ', arrayIndexes);
-
   console.log('mapArray: ', mapArray); // map array
 
   /**
    *  Kolla hela rowen alltså alla index på rowen samt valuet där, detta blir då horizontellt
    *  Kolla sedan Verticalt uppifrån och ner och detta gör jag med vilket row index den har och tar alla på den columnen
    */
-  // for (let i = 0; i < array.length; i++) {
-  //   const element = array[i];
-  // }
-  // console.log(mapArray[rowIndex][columnIndex]);
 
+  // ROW, WHOLE Row!!!!
+  counterHowMany += SearchingWholeRow(arrayIndexes, mapArray);
+  console.log('counterHowMany: ', counterHowMany);
+  //----------------------------------------------------------------------------------------------
+}
+
+function SearchingWholeRow(arrayIndexes, mapArray) {
+  let countSum = 0;
   for (let i = 0; i < mapArray.length; i++) {
-    // Denna rowen
-    // if(arrayIndexes[0])
     if (arrayIndexes.rowIndex === i) {
       for (let j = 0; j < mapArray[i].length; j++) {
         if (arrayIndexes.columnIndex === j) {
           // Kollar att den value som finns är det rätta
           let counter = 0;
           let isGreater = false;
-
           while (counter < mapArray.length) {
             // Här loppar igenom hela rowen!
-            // console.log('mapArray[i][j]: ', mapArray[i][j]);
-            // console.log('i: ', i);
-            // console.log('j:', j);
             if (counter === j) {
-              // console.log('Här inne');
-              isBackwardGreater(counter);
-            } else {
+              countSum += isBackwardGreater(
+                counter,
+                mapArray[i],
+                mapArray[i][j]
+              );
+            } else if (counter > j) {
               if (mapArray[i][counter] >= mapArray[i][j]) {
-                // console.log('mapArray[i][counter]: ', mapArray[i][counter]);
+                // Höger om raden
                 isGreater = true;
                 break;
-                // } else if (mapArray[i][j] > mapArray[i][0]) {
-                //   console.log('sant');
-                // }
-                console.log('mapArray[i][counter]: ', mapArray[i][counter]);
               }
             }
             counter++;
           }
-          if (isGreater === false) {
-            // console.log('Funkade!');
+          if (isGreater === true) {
+            console.log('Finns inte något på raden! ');
           } else {
-            // console.log('Inte funkade!');
+            console.log('Finns något på raden!');
+            countSum += 1;
           }
         }
       }
     }
-
-    // for (let j = 0; j < mapArray[i].length; j++) {
-    // }
   }
+
+  return countSum;
 }
 
-function isBackwardGreater(indexLengthBackward) {
-  console.log('indexLengthBackward: ', indexLengthBackward - 1); // Korrekt
+function isBackwardGreater(indexLengthBackward, array, valueNow) {
+  // Vänster om en rad!
+  // console.log('indexLengthBackward: ', indexLengthBackward - 1); // Korrekt
+
+  let isGreater = false;
+  for (let i = 0; i < indexLengthBackward; i++) {
+    if (valueNow > array[i]) {
+      isGreater = true;
+    }
+  }
+  if (isGreater === true) {
+    return 1;
+  }
+  // console.log('array: ', array);
 }
 
 const dataTemp = deletingEmptyText(dataInput);
