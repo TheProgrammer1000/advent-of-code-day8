@@ -29,16 +29,30 @@ const dataSortColumnArray = (dataTemp) => {
 };
 
 const dataSortRowTempArray = (dataArray) => {
-  let countColumns = 0;
+  const arrayRows = dataArray.length; // Rows
+  const arrayColumn = dataArray[0].length; // Columns
+
+  console.log(dataArray);
+
+  let arrayTemp = [];
+  let arrayFinal = [];
+
   for (let i = 0; i < dataArray.length; i++) {
-    countColumns++;
+    for (let j = 0; j < dataArray[i].length; j++) {
+      console.log(dataArray[i][j]);
+      arrayTemp.push(dataArray[i][j]);
+      if (j === dataArray[i].length - 1) {
+        console.log('arrayTemp: ', arrayTemp);
+        arrayFinal.push(arrayTemp);
+        arrayTemp = [];
+      }
+    }
   }
 
-  return dataArray;
+  console.log('arrayFinal: ', arrayFinal);
+  console.log('arrayFinal[0][0]: ', arrayFinal[0][0]);
 };
 
 const dataTemp = deletingEmptyText(dataInput);
 const dataArray = dataSortColumnArray(dataTemp);
 const dataArrayFinal = dataSortRowTempArray(dataArray);
-
-console.log('dataArrayFinal: ', dataArrayFinal);
