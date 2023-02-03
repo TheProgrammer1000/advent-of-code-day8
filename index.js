@@ -106,6 +106,10 @@ const solotion = (sortedArrayMap, sortedArrayPlayGround) => {
     // Row
     let isValue = false;
     for (let j = 0; j < sortedArrayMapTemp[i].length; j++) {
+      console.log(
+        'sortedArrayPlayGroundTemp[i][j]: ',
+        typeof sortedArrayPlayGroundTemp[i][j]
+      );
       if (sortedArrayPlayGroundTemp[i][j] !== '') {
         // console.log(
         //   'sortedArrayPlayGroundTemp[i][j]: ',
