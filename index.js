@@ -44,23 +44,41 @@ const dataSortRowTempArray = (dataArray) => {
       }
     }
   }
-
-  // console.log('arrayFinal: ', arrayFinal); // Denna är rätt!
   return arrayFinal;
 };
 
 const arrayFilterWithString = (dataArray) => {
   const dataArrayTemp = dataArray.slice();
+  // const dataArrayFinal = dataArray.slice();
+
+  let arrayFinal = [];
+  let arrayRealFinal = [];
+
+  // console.log('dataArrayTemp ', dataArrayTemp);
+
+  // console.log('arrayRealFinal: ', arrayRealFinal);
+
+  // console.log('arrayFinal: ', arrayFinal);
+
   for (let i = 0; i < dataArrayTemp[0].length; i++) {
-    // E på ovanför och under!
     dataArrayTemp[0][i] = 'E';
     dataArrayTemp[dataArrayTemp.length - 1][i] = 'E';
   }
+
+  // console.log('dataArrayTemp: ', dataArrayTemp);
+
+  // console.log('dataArrayTemp.length: ', dataArrayTemp.length - 1);
+
+  // console.log(
+  //   'dataArrayTemp[0][dataArrayTemp.length - 1]: ',
+  //   dataArrayTemp[3][dataArrayTemp[0].length - 1]
+  // );
 
   for (let i = 0; i < dataArrayTemp.length; i++) {
     dataArrayTemp[i][0] = 'E';
     dataArrayTemp[i][dataArrayTemp[0].length - 1] = 'E';
   }
+
   return dataArrayTemp;
 };
 
@@ -81,85 +99,205 @@ function playGroundSorted(arrayRealFinal) {
   return arrayNow;
 }
 
-const solotion = (dataArrayFinal, sortedArrayMap) => {
+const solotion = (dataArrayFinal, sortedArrayMap, sortedArrayPlayGround) => {
   const sortedArrayMapTemp = sortedArrayMap.slice();
-  // console.log('dataArrayFinal: ', dataArrayFinal);
-  // console.log('sortedArrayMapTemp: ', sortedArrayMapTemp);
+  const sortedArrayPlayGroundTemp = sortedArrayPlayGround.slice();
 
   for (let i = 0; i < sortedArrayMapTemp.length; i++) {
     // Row
+    let isValue = false;
     for (let j = 0; j < sortedArrayMapTemp[i].length; j++) {
-      if (sortedArrayMap[i][j] !== '') {
-        // Rätt!!!
-        // console.log('sortedArrayMap[i][j]: ', sortedArrayMap[i][j]);
-        Calculation(i, j, sortedArrayMap[i][j], dataArrayFinal); // Calculation för varje index!
+      if (sortedArrayPlayGroundTemp[i][j] !== '') {
+        Calculation(i, j, sortedArrayPlayGroundTemp[i][j], dataArrayFinal); // Calculation för varje index!
       }
     }
   }
 };
 
-function WholeRowSearch(backwardArray, indexesObject) {
-  for (let i = 0; i < backwardArray.length; i++) {
-    if (
-      backwardArray[indexesObject.rowIndex][i] >=
-        backwardArray[indexesObject.rowIndex][indexesObject.columnIndex] &&
-      backwardArray[indexesObject.rowIndex][i] !==
-        backwardArray[indexesObject.rowIndex][indexesObject.columnIndex] &&
-      i === indexesObject.rowIndex
-    ) {
-      return 0;
+function isBackwardGreater(indexLengthBackward, array, valueNow) {
+  // Vänster om en rad!
+  // console.log('indexLengthBackward: ', indexLengthBackward - 1); // Korrekt
+  let isGreater = false;
+  for (let i = 0; i < indexLengthBackward; i++) {
+    if (array[i] >= valueNow) {
+      isGreater = true;
     }
+    // console.log('valueNow: ', valueNow);
+    // console.log('array[i]: ', array[i]);
   }
-  return 1;
+  if (isGreater === true) {
+    return 0;
+  } else {
+    return 1;
+  }
 }
 
-function SearchingWholeColumn(mapArray, arrayIndexes) {
+function SearchingWholeRow(arrayIndexes, mapArray) {
+  let countSum = 0;
+
+  // console.log(
+  //   'mapArray[arrayIndexes.rowIndex][arrayIndexes.columnIndex]: ',
+  //   mapArray[arrayIndexes.rowIndex][arrayIndexes.columnIndex]
+  // );
+
   for (let i = 0; i < mapArray.length; i++) {
-    if (
-      mapArray[i][arrayIndexes.columnIndex] >=
-        mapArray[arrayIndexes.rowIndex][arrayIndexes.columnIndex] &&
-      mapArray[i][arrayIndexes.columnIndex] !==
-        mapArray[arrayIndexes.rowIndex][arrayIndexes.columnIndex] &&
-      i === arrayIndexes.rowIndex
-    ) {
-      return 0;
+    if (arrayIndexes.rowIndex === i) {
+      for (let j = 0; j < mapArray[i].length; j++) {
+        if (arrayIndexes.columnIndex === j) {
+          // Kollar att den value som finns är det rätta
+          let counter = 0;
+          let isGreater = false;
+          while (counter < mapArray.length) {
+            // Här loppar igenom hela rowen!
+            if (counter === j) {
+              countSum += isBackwardGreater(
+                counter,
+                mapArray[i],
+                mapArray[i][j]
+              );
+              // console.log('countSum RÄTT INGE NULL: ', countSum);
+              // console.log('countSum HÄÄÄÄÄÄR: ', countSum);
+            } else if (counter > j) {
+              if (
+                mapArray[i][counter] >=
+                mapArray[arrayIndexes.rowIndex][arrayIndexes.columnIndex]
+              ) {
+                // Höger om raden
+                isGreater = true;
+                break;
+              }
+            }
+            counter++;
+          }
+          if (isGreater === true) {
+            // console.log('Finns inte något på raden! ');
+          } else {
+            // console.log('Finns något på raden HÄÄÄÄR! RÄÄÄÄTTT');
+            countSum += 1;
+            // console.log('countSum: ', countSum);
+          }
+        }
+      }
     }
   }
-  return 1;
+  // console.log('counterSum', countSum);
+  return countSum;
 }
 
-let totalResult = 0;
+function SearchingWholeColumn(arrayIndexes, mapArray) {
+  // Column 1 Backward
+  let counterTotal = 0;
+  let counterColumn = 0;
 
+  for (let i = 0; i < mapArray.length; i++) {
+    // Column
+    counterColumn++;
+  }
+
+  let arrayBackward = [];
+  let arrayForward = [];
+  for (let i = 0; i < mapArray.length; i++) {
+    if (i === arrayIndexes.rowIndex) {
+      counterTotal += ColumnBackward(
+        // Column Bakåt
+        mapArray[arrayIndexes.rowIndex][arrayIndexes.columnIndex],
+        arrayBackward
+      );
+    } else if (i < arrayIndexes.rowIndex) {
+      arrayBackward.push(mapArray[i][arrayIndexes.columnIndex]);
+    } else {
+      arrayForward.push(mapArray[i][arrayIndexes.columnIndex]);
+    }
+  }
+  counterTotal += ColumnForward(
+    // Column forward
+    // Column Framåt
+    arrayForward,
+    mapArray[arrayIndexes.rowIndex][arrayIndexes.columnIndex]
+  );
+
+  return counterTotal;
+}
+
+function ColumnForward(arrayForward, value) {
+  let isGreater = false;
+  for (let i = 0; i < arrayForward.length; i++) {
+    if (arrayForward[i] >= value) {
+      isGreater = true;
+    }
+  }
+  if (isGreater === false) {
+    return 1;
+  } else {
+    return 0;
+  }
+}
+
+function ColumnBackward(theFinalValue, backWardArray) {
+  let isGreater = false;
+  for (let i = 0; i < backWardArray.length; i++) {
+    if (backWardArray[i] >= theFinalValue) {
+      isGreater = true;
+    }
+  }
+  if (isGreater === false) {
+    return 1;
+  } else {
+    return 0;
+  }
+}
+
+let counterHowMany = 0;
+
+let counterFinal = 0;
 function Calculation(rowIndex, columnIndex, value, mapArray) {
-  // console.log('value: ', value);
+  let RowValue = 0;
+  let ColumnValue = 0;
+
   arrayIndexes = {
     rowIndex: rowIndex,
     columnIndex: columnIndex,
     value: value
   };
 
-  let searchTotal = 0;
-
   // ROW, WHOLE Row!!!!
-  searchTotal += WholeRowSearch(mapArray, arrayIndexes);
-  searchTotal += SearchingWholeColumn(
-    // KLAR!!!!
-    mapArray,
-    arrayIndexes
-  );
+  RowValue += SearchingWholeRow(arrayIndexes, mapArray);
+  ColumnValue += SearchingWholeColumn(arrayIndexes, mapArray);
 
-  if (searchTotal > 0) {
-    totalResult += 1;
+  // console.log('RowValue: ', RowValue);
+  // console.log('ColumnValue: ', ColumnValue);
+
+  if (RowValue > 0 || ColumnValue > 0) {
+    counterHowMany += 1;
+    // console.log('SAAAAANNNNNTTTT ADDDDEEERRRRAAAAA!');
   }
+
   //----------------------------------------------------------------------------------------------
 }
 
 const dataTemp = deletingEmptyText(dataInput);
 const dataArray = dataSortColumnArray(dataTemp); // Sortings
+
 const dataArrayFinal = dataSortRowTempArray(dataArray);
 const dataArrayFinalTemp = dataSortRowTempArray(dataArray);
 
-const SortedArrayMap = arrayFilterWithString(dataArrayFinalTemp);
-
+const SortedArrayMap = arrayFilterWithString(dataArrayFinal);
 const SortedArrayPlayGround = playGroundSorted(SortedArrayMap); // This one needs help!
-solotion(dataArrayFinal, SortedArrayPlayGround);
+
+solotion(dataArrayFinalTemp, SortedArrayPlayGround, SortedArrayPlayGround);
+
+// console.log('counterHowMany: ', counterHowMany); // RÄTT!!!
+// console.log('SortedArrayMap: ', SortedArrayMap); // Gör en counter här som räknar hur månge E som finns! addera detta sedan med counterHowMany!
+
+let counter = 0;
+for (let i = 0; i < SortedArrayMap.length; i++) {
+  for (let j = 0; j < SortedArrayMap[i].length; j++) {
+    if (SortedArrayMap[i][j] === 'E') {
+      counter++;
+    }
+  }
+}
+// console.log('SortedArrayMap: ', SortedArrayMap);
+
+const RealTotal = counterHowMany + counter;
+console.log('RealTotal: ', RealTotal);
