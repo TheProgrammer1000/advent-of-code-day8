@@ -193,7 +193,7 @@ function playGroundSorted(arrayRealFinal) {
   return arrayNow;
 }
 
-const solotion = (sortedArrayMap, sortedArrayPlayGround) => {
+const solotion = (dataArrayFinal, sortedArrayMap, sortedArrayPlayGround) => {
   const sortedArrayMapTemp = sortedArrayMap.slice();
   const sortedArrayPlayGroundTemp = sortedArrayPlayGround.slice();
 
@@ -202,11 +202,7 @@ const solotion = (sortedArrayMap, sortedArrayPlayGround) => {
     let isValue = false;
     for (let j = 0; j < sortedArrayMapTemp[i].length; j++) {
       if (sortedArrayPlayGroundTemp[i][j] !== '') {
-        // console.log(
-        //   'sortedArrayPlayGroundTemp[i][j]: ',
-        //   sortedArrayPlayGroundTemp[i][j]
-        // );
-        Calculation(i, j, sortedArrayPlayGroundTemp[i][j], sortedArrayMapTemp); // Calculation för varje index!
+        Calculation(i, j, sortedArrayPlayGroundTemp[i][j], dataArrayFinal); // Calculation för varje index!
       }
     }
   }
@@ -332,9 +328,6 @@ function ColumnForward(arrayForward, value) {
 }
 
 function ColumnBackward(theFinalValue, backWardArray) {
-  // console.log('backWardArray: ', backWardArray);
-  // console.log('theFinalValue: ', theFinalValue);
-
   let isGreater = false;
   for (let i = 0; i < backWardArray.length; i++) {
     if (backWardArray[i] >= theFinalValue) {
@@ -377,17 +370,15 @@ function Calculation(rowIndex, columnIndex, value, mapArray) {
 }
 
 const dataTemp = deletingEmptyText(dataInput);
-
-// console.log('dataInput: ', dataInput);
-
 const dataArray = dataSortColumnArray(dataTemp); // Sortings
+
 const dataArrayFinal = dataSortRowTempArray(dataArray);
+const dataArrayFinalTemp = dataSortRowTempArray(dataArray);
 
 const SortedArrayMap = arrayFilterWithString(dataArrayFinal);
 const SortedArrayPlayGround = playGroundSorted(SortedArrayMap); // This one needs help!
-// console.log('SortedArrayPlayGround: ', SortedArrayPlayGround);
 
-solotion(dataArrayFinal, SortedArrayPlayGround, SortedArrayPlayGround);
+solotion(dataArrayFinalTemp, SortedArrayPlayGround, SortedArrayPlayGround);
 
 // console.log('counterHowMany: ', counterHowMany); // RÄTT!!!
 // console.log('SortedArrayMap: ', SortedArrayMap); // Gör en counter här som räknar hur månge E som finns! addera detta sedan med counterHowMany!
@@ -403,4 +394,4 @@ for (let i = 0; i < SortedArrayMap.length; i++) {
 // console.log('SortedArrayMap: ', SortedArrayMap);
 
 const RealTotal = counterHowMany + counter;
-// console.log('RealTotal: ', RealTotal);
+console.log('RealTotal: ', RealTotal);
