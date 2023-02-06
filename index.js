@@ -112,21 +112,22 @@ function isBackwardGreater(indexLengthBackward, array, valueNow) {
 }
 
 function SearchingWholeRow(arrayIndexes, mapArray) {
-  // console.log('mapArray: ', mapArray);
+  console.log('mapArray: ', mapArray);
   // console.log('arrayIndexes: ', arrayIndexes);
   for (let i = 0; i < mapArray.length; i++) {
     // console.log('mapArray[i]: ', mapArray[i]);
     for (let j = 0; j < mapArray[i].length; j++) {
       if (mapArray[i][j] !== 'E') {
         // console.log('mapArray[i][j]: ', mapArray[i][j]);
-        RowBackwardsLoop(mapArray[i][j]);
+        RowBackwardsLoop(mapArray, arrayIndexes);
       }
     }
   }
 }
 
-function RowBackwardsLoop(backwardArray) {
-  // console.log('backwardArray: ', backwardArray);
+function RowBackwardsLoop(backwardArray, indexesObject) {
+  console.log('backwardArray: ', backwardArray);
+  console.log('indexesObject: ', indexesObject);
 }
 
 function SearchingWholeColumn(arrayIndexes, mapArray) {
@@ -199,7 +200,7 @@ let counterHowMany = 0;
 
 let counterFinal = 0;
 function Calculation(rowIndex, columnIndex, value, mapArray) {
-  console.log('value: ', value);
+  // console.log('value: ', value);
 
   let RowValue = 0;
   let ColumnValue = 0;
