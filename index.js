@@ -83,12 +83,14 @@ function playGroundSorted(arrayRealFinal) {
 
 const solotion = (dataArrayFinal, sortedArrayMap) => {
   const sortedArrayMapTemp = sortedArrayMap.slice();
-  console.log('dataArrayFinal: ', dataArrayFinal);
+  // console.log('dataArrayFinal: ', dataArrayFinal);
+  // console.log('sortedArrayMapTemp: ', sortedArrayMapTemp);
 
   for (let i = 0; i < sortedArrayMapTemp.length; i++) {
     // Row
     for (let j = 0; j < sortedArrayMapTemp[i].length; j++) {
       if (sortedArrayMap[i][j] !== '') {
+        // Rätt!!!
         // console.log('sortedArrayMap[i][j]: ', sortedArrayMap[i][j]);
         Calculation(i, j, sortedArrayMap[i][j], dataArrayFinal); // Calculation för varje index!
       }
@@ -96,133 +98,59 @@ const solotion = (dataArrayFinal, sortedArrayMap) => {
   }
 };
 
-function isBackwardGreater(indexLengthBackward, array, valueNow) {
-  // Vänster om en rad!
-  let isGreater = false;
-  for (let i = 0; i < indexLengthBackward; i++) {
-    if (array[i] >= valueNow) {
-      isGreater = true;
+function WholeRowSearch(backwardArray, indexesObject) {
+  for (let i = 0; i < backwardArray.length; i++) {
+    if (
+      backwardArray[indexesObject.rowIndex][i] >=
+        backwardArray[indexesObject.rowIndex][indexesObject.columnIndex] &&
+      backwardArray[indexesObject.rowIndex][i] !==
+        backwardArray[indexesObject.rowIndex][indexesObject.columnIndex] &&
+      i === indexesObject.rowIndex
+    ) {
+      return 0;
     }
   }
-  if (isGreater === true) {
-    return 0;
-  } else {
-    return 1;
-  }
+  return 1;
 }
 
-function SearchingWholeRow(arrayIndexes, mapArray) {
-  console.log('mapArray: ', mapArray);
-  // console.log('arrayIndexes: ', arrayIndexes);
+function SearchingWholeColumn(mapArray, arrayIndexes) {
   for (let i = 0; i < mapArray.length; i++) {
-    // console.log('mapArray[i]: ', mapArray[i]);
-    for (let j = 0; j < mapArray[i].length; j++) {
-      if (mapArray[i][j] !== 'E') {
-        // console.log('mapArray[i][j]: ', mapArray[i][j]);
-        RowBackwardsLoop(mapArray, arrayIndexes);
-      }
+    if (
+      mapArray[i][arrayIndexes.columnIndex] >=
+        mapArray[arrayIndexes.rowIndex][arrayIndexes.columnIndex] &&
+      mapArray[i][arrayIndexes.columnIndex] !==
+        mapArray[arrayIndexes.rowIndex][arrayIndexes.columnIndex] &&
+      i === arrayIndexes.rowIndex
+    ) {
+      return 0;
     }
   }
+  return 1;
 }
 
-function RowBackwardsLoop(backwardArray, indexesObject) {
-  console.log('backwardArray: ', backwardArray);
-  console.log('indexesObject: ', indexesObject);
-}
+let totalResult = 0;
 
-function SearchingWholeColumn(arrayIndexes, mapArray) {
-  // Column 1 Backward
-  let counterTotal = 0;
-  let counterColumn = 0;
-
-  for (let i = 0; i < mapArray.length; i++) {
-    // Column
-    counterColumn++;
-  }
-
-  let arrayBackward = [];
-  let arrayForward = [];
-  for (let i = 0; i < mapArray.length; i++) {
-    if (i === arrayIndexes.rowIndex) {
-      counterTotal += ColumnBackward(
-        // Column Bakåt
-        mapArray[arrayIndexes.rowIndex][arrayIndexes.columnIndex],
-        arrayBackward
-      );
-    } else if (i < arrayIndexes.rowIndex) {
-      arrayBackward.push(mapArray[i][arrayIndexes.columnIndex]);
-    } else {
-      arrayForward.push(mapArray[i][arrayIndexes.columnIndex]);
-    }
-  }
-  counterTotal += ColumnForward(
-    // Column forward
-    // Column Framåt
-    arrayForward,
-    mapArray[arrayIndexes.rowIndex][arrayIndexes.columnIndex]
-  );
-
-  return counterTotal;
-}
-
-function ColumnForward(arrayForward, value) {
-  let isGreater = false;
-  for (let i = 0; i < arrayForward.length; i++) {
-    if (arrayForward[i] >= value) {
-      isGreater = true;
-    }
-  }
-  if (isGreater === false) {
-    return 1;
-  } else {
-    return 0;
-  }
-}
-
-function ColumnBackward(theFinalValue, backWardArray) {
-  // console.log('backWardArray: ', backWardArray);
-  // console.log('theFinalValue: ', theFinalValue);
-
-  let isGreater = false;
-  for (let i = 0; i < backWardArray.length; i++) {
-    if (backWardArray[i] >= theFinalValue) {
-      isGreater = true;
-    }
-  }
-  if (isGreater === false) {
-    return 1;
-  } else {
-    return 0;
-  }
-}
-
-let counterHowMany = 0;
-
-let counterFinal = 0;
 function Calculation(rowIndex, columnIndex, value, mapArray) {
   // console.log('value: ', value);
-
-  let RowValue = 0;
-  let ColumnValue = 0;
-
   arrayIndexes = {
     rowIndex: rowIndex,
     columnIndex: columnIndex,
     value: value
   };
 
+  let searchTotal = 0;
+
   // ROW, WHOLE Row!!!!
-  RowValue += SearchingWholeRow(arrayIndexes, mapArray);
-  ColumnValue += SearchingWholeColumn(arrayIndexes, mapArray);
+  searchTotal += WholeRowSearch(mapArray, arrayIndexes);
+  searchTotal += SearchingWholeColumn(
+    // KLAR!!!!
+    mapArray,
+    arrayIndexes
+  );
 
-  // console.log('RowValue: ', RowValue);
-  // console.log('ColumnValue: ', ColumnValue);
-
-  if (RowValue > 0 || ColumnValue > 0) {
-    counterHowMany += 1;
-    // console.log('SAAAAANNNNNTTTT ADDDDEEERRRRAAAAA!');
+  if (searchTotal > 0) {
+    totalResult += 1;
   }
-
   //----------------------------------------------------------------------------------------------
 }
 
@@ -234,21 +162,4 @@ const dataArrayFinalTemp = dataSortRowTempArray(dataArray);
 const SortedArrayMap = arrayFilterWithString(dataArrayFinalTemp);
 
 const SortedArrayPlayGround = playGroundSorted(SortedArrayMap); // This one needs help!
-
 solotion(dataArrayFinal, SortedArrayPlayGround);
-
-// console.log('counterHowMany: ', counterHowMany); // RÄTT!!!
-// console.log('SortedArrayMap: ', SortedArrayMap); // Gör en counter här som räknar hur månge E som finns! addera detta sedan med counterHowMany!
-
-let counter = 0;
-for (let i = 0; i < SortedArrayMap.length; i++) {
-  for (let j = 0; j < SortedArrayMap[i].length; j++) {
-    if (SortedArrayMap[i][j] === 'E') {
-      counter++;
-    }
-  }
-}
-// console.log('SortedArrayMap: ', SortedArrayMap);
-
-const RealTotal = counterHowMany + counter;
-// console.log('RealTotal: ', RealTotal);
